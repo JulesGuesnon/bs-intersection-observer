@@ -1,6 +1,9 @@
 {
     "name": "bs-intersection-observer",
     "version": "0.1.2",
+    "repository": {
+        "url": "https://github.com/JulesGuesnon/bs-intersection-observer"
+    },
     "description": "This package contains the bindings for the IntersectionObserver api",
     "scripts": {
         "build": "bsb -make-world",
