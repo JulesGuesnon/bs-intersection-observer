@@ -1,6 +1,6 @@
 {
     "name": "bs-intersection-observer",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "description": "This package contains the bindings for the IntersectionObserver api",
     "scripts": {
         "build": "bsb -make-world",
