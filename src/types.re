@@ -1,15 +1,4 @@
 module JsT = {
-  type observer = {
-    .
-    [@bs.meth] observe: Dom.element => unit,
-    [@bs.meth] unobserve: Dom.element => unit,
-    delay: int,
-    root: option(Dom.element),
-    rootMargin: string,
-    thresholds: array(float),
-    trackVisibility: bool,
-  };
-
   type boundingClientRect = {
     .
     "x": float,
@@ -35,6 +24,19 @@ module JsT = {
   };
   type entries = array(Js.t(entry));
 
+  type observer = {
+    .
+    [@bs.meth] observe: Dom.element => unit,
+    [@bs.meth] unobserve: Dom.element => unit,
+    [@bs.meth] disconnect: unit => unit,
+    [@bs.meth] takeRecords: unit => entries,
+    delay: int,
+    root: option(Dom.element),
+    rootMargin: string,
+    thresholds: array(float),
+    trackVisibility: bool,
+  };
+
   type intersectionObserverParam = {
     .
     threshold: option(float),
@@ -44,16 +46,6 @@ module JsT = {
 };
 
 module T = {
-  type observer = {
-    observe: Dom.element => unit,
-    unobserve: Dom.element => unit,
-    delay: int,
-    root: option(Dom.element),
-    rootMargin: string,
-    thresholds: array(float),
-    trackVisibility: bool,
-  };
-
   type boundingClientRect = {
     x: float,
     y: float,
@@ -83,10 +75,24 @@ module T = {
     root: option(Dom.element),
   };
 
+  type observer = {
+    observe: Dom.element => unit,
+    unobserve: Dom.element => unit,
+    disconnect: unit => unit,
+    takeRecords: unit => entries,
+    delay: int,
+    root: option(Dom.element),
+    rootMargin: string,
+    thresholds: array(float),
+    trackVisibility: bool,
+  };
+
   let observerFromJsObserver = observer => {
     {
       observe: el => observer##observe(el),
       unobserve: el => observer##unobserve(el),
+      disconnect: () => observer##disconnect(),
+      takeRecords: () => observer##takeRecords(),
       delay: observer##delay,
       root: observer##root,
       rootMargin: observer##rootMargin,
