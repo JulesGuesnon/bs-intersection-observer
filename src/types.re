@@ -87,20 +87,6 @@ module T = {
     trackVisibility: bool,
   };
 
-  let observerFromJsObserver = observer => {
-    {
-      observe: el => observer##observe(el),
-      unobserve: el => observer##unobserve(el),
-      disconnect: () => observer##disconnect(),
-      takeRecords: () => observer##takeRecords(),
-      delay: observer##delay,
-      root: observer##root,
-      rootMargin: observer##rootMargin,
-      thresholds: observer##thresholds,
-      trackVisibility: observer##trackVisibility,
-    };
-  };
-
   let clientRectFromjsClientRect = boundingClientRect => {
     {
       x: boundingClientRect##x,
@@ -114,22 +100,39 @@ module T = {
     };
   };
 
-  let cbFromJsCb = (cb, entries, observer) => {
-    let formattedEntries =
-      Belt.Array.map(entries, entry =>
-        {
-          boundingClientRect:
-            clientRectFromjsClientRect(entry##boundingClientRect),
-          intersectionRect:
-            clientRectFromjsClientRect(entry##intersectionRect),
-          rootBounds: clientRectFromjsClientRect(entry##rootBounds),
-          intersectionRatio: entry##intersectionRatio,
-          isIntersecting: entry##isIntersecting,
-          isVisible: entry##isVisible,
-          target: entry##target,
-          time: entry##time,
-        }
-      );
+  let entriesFromJsEntries = entries => {
+    Belt.Array.map(entries, entry =>
+      {
+        boundingClientRect:
+          clientRectFromjsClientRect(entry##boundingClientRect),
+        intersectionRect: clientRectFromjsClientRect(entry##intersectionRect),
+        rootBounds: clientRectFromjsClientRect(entry##rootBounds),
+        intersectionRatio: entry##intersectionRatio,
+        isIntersecting: entry##isIntersecting,
+        isVisible: entry##isVisible,
+        target: entry##target,
+        time: entry##time,
+      }
+    );
+  };
+
+  let observerFromJsObserver = (observer: Js.t(JsT.observer)) => {
+    {
+      observe: el => observer##observe(el),
+      unobserve: el => observer##unobserve(el),
+      disconnect: () => observer##disconnect(),
+      takeRecords: () => observer##takeRecords()->entriesFromJsEntries,
+      delay: observer##delay,
+      root: observer##root,
+      rootMargin: observer##rootMargin,
+      thresholds: observer##thresholds,
+      trackVisibility: observer##trackVisibility,
+    };
+  };
+
+  let cbFromJsCb = (cb, entries: JsT.entries, observer) => {
+    let formattedEntries = entriesFromJsEntries(entries);
+
     cb(formattedEntries, observerFromJsObserver(observer));
   };
 };
