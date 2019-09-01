@@ -14,7 +14,8 @@
     "keywords": [
         "BuckleScript",
         "IntersectionObserver",
-        "ReasonML"
+        "ReasonML",
+        "Reason"
     ],
     "author": "Jules Guesnon <hello@julesgueson.com>",
     "license": "MIT",
